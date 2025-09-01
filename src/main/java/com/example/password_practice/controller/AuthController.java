@@ -59,4 +59,13 @@ public class AuthController {
     public String dashboard(Model model) {
         return "dashboard";
     }
+/***
+ * password-test mapping 인데
+ * 했을 때 오류 발생으로 주석처리
+
+    @GetMapping("/password-test/form")
+    public String passwordTestForm() {
+        return "password-test";
+    }
+*/
 }
