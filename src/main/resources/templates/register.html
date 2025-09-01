@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입 - 패스워드 암호화 데모</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 40px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .password-requirements {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border-left: 4px solid #667eea;
+        }
+        .requirements-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .requirements-list {
+            color: #666;
+            line-height: 1.6;
+        }
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .links a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+        .demo-section {
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🔐 회원가입</h1>
+        <p>BCrypt 패스워드 암호화 데모</p>
+    </div>
+
+    <div class="alert alert-error" th:if="${error}">
+        <strong>오류:</strong> <span th:text="${error}"></span>
+    </div>
+
+    <div class="password-requirements">
+        <div class="requirements-title">📋 패스워드 요구사항</div>
+        <div class="requirements-list">
+            • 최소 8자 이상<br>
+            • 대문자 최소 1개<br>
+            • 소문자 최소 1개<br>
+            • 숫자 최소 1개<br>
+            • 특수문자 최소 1개 (@$!%*?&)<br>
+            • 일반적인 패스워드 사용 금지
+        </div>
+    </div>
+
+    <form method="post" action="/register">
+        <div class="form-group">
+            <label for="username">사용자명</label>
+            <input type="text" id="username" name="username"
+                   th:value="${username}" required
+                   minlength="3" maxlength="20">
+        </div>
+
+        <div class="form-group">
+            <label for="password">패스워드</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">이메일</label>
+            <input type="email" id="email" name="email"
+                   th:value="${email}" required>
+        </div>
+
+        <button type="submit" class="btn">회원가입</button>
+    </form>
+
+    <div class="demo-section">
+        <h4>🧪 테스트용 패스워드 예시</h4>
+        <p><strong>강한 패스워드:</strong> MySecure123!</p>
+        <p><strong>약한 패스워드:</strong> password (사용 불가)</p>
+
+        <div style="margin-top: 15px;">
+            <strong>🔒 보안 특징:</strong><br>
+            • 패스워드는 BCrypt로 해싱되어 저장됩니다<br>
+            • 같은 패스워드라도 매번 다른 해시값이 생성됩니다<br>
+            • Cost Factor 12로 4,096번 해싱 반복됩니다
+        </div>
+    </div>
+
+    <div class="links">
+        <a href="/login">로그인</a>
+        <a href="/">홈으로</a>
+        <a href="/h2-console" target="_blank">H2 DB 콘솔</a>
+    </div>
+</div>
+
+<script>
+    // 실시간 패스워드 강도 검증
+    const passwordInput = document.getElementById('password');
+
+    passwordInput.addEventListener('input', function() {
+        const password = this.value;
+        const requirements = {
+            length: password.length >= 8,
+            uppercase: /[A-Z]/.test(password),
+            lowercase: /[a-z]/.test(password),
+            number: /\d/.test(password),
+            special: /[@$!%*?&]/.test(password)
+        };
+
+        const allMet = Object.values(requirements).every(req => req);
+
+        this.style.borderColor = allMet ? '#22c55e' :
+                               password.length > 0 ? '#f59e0b' : '#ddd';
+    });
+</script>
+</body>
+</html>

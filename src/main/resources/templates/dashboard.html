@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대시보드</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logout-btn {
+            padding: 8px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .main-content {
+            padding: 3rem 2rem;
+        }
+
+        .welcome-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .info-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .info-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .info-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .success-message {
+            background: #4caf50;
+            color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="container">
+        <div class="header-content">
+            <h1>대시보드</h1>
+            <a href="/logout" class="logout-btn">로그아웃</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="main-content">
+        <div class="success-message">
+            <span>✅</span>
+            <span>로그인에 성공했습니다! 패스워드가 BCrypt로 안전하게 검증되었습니다.</span>
+        </div>
+
+        <div class="welcome-card">
+            <h2>환영합니다!</h2>
+            <p>BCrypt 해싱을 통해 안전하게 저장된 패스워드로 로그인하셨습니다.</p>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>🔐 BCrypt 해싱</h3>
+                <p>귀하의 패스워드는 BCrypt 알고리즘으로 안전하게 해시되어 저장됩니다. 원본 패스워드는 복구할 수 없습니다.</p>
+            </div>
+
+            <div class="info-card">
+                <h3>🛡️ Salt 자동 생성</h3>
+                <p>각 패스워드마다 고유한 Salt가 자동 생성되어 레인보우 테이블 공격을 방어합니다.</p>
+            </div>
+
+            <div class="info-card">
+                <h3>⚡ Cost Factor 12</h3>
+                <p>2^12 (4,096)번의 해싱 반복으로 브루트포스 공격에 대한 저항력을 높였습니다.</p>
+            </div>
+
+            <div class="info-card">
+                <h3>📊 테스트 도구</h3>
+                <p><a href="/password-test/form">패스워드 해싱 테스트</a>로 BCrypt 동작을 직접 확인해보세요.</p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
